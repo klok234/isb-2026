@@ -7,52 +7,80 @@ from cryptography.hazmat.primitives.serialization import (
 
 
 def generate_rsa_keys():
-    print("Начинаю генерацию...")
+    """Generate a pair of public and private keys."""
+    print("Start generating...")
     keys = rsa.generate_private_key(public_exponent=65537, key_size=2048)
     private_key = keys
     public_key = keys.public_key()
     return private_key, public_key
 
 
-def serialize_public_key(public_key, public_pem: str) -> None:
-    with open(public_pem, "wb") as public_out:
-        public_out.write(
-            public_key.public_bytes(
-                encoding=serialization.Encoding.PEM,
-                format=serialization.PublicFormat.SubjectPublicKeyInfo,
+def serialize_public_key(public_key, public_pem: str):
+    """Save the key in the format .pem on the path"""
+    try:
+        with open(public_pem, "wb") as public_out:
+            public_out.write(
+                public_key.public_bytes(
+                    encoding=serialization.Encoding.PEM,
+                    format=serialization.PublicFormat.SubjectPublicKeyInfo,
+                )
             )
-        )
-    print(f"Публичный ключ сохранен в {public_pem}")
+        print(f"Public key is saved to {public_pem}")
+    except Exception as e:
+        print(e)
+        exit(2)
 
 
-def serialize_private_key(private_key, private_pem: str) -> None:
-    with open(private_pem, "wb") as private_out:
-        private_out.write(
-            private_key.private_bytes(
-                encoding=serialization.Encoding.PEM,
-                format=serialization.PrivateFormat.TraditionalOpenSSL,
-                encryption_algorithm=serialization.NoEncryption(),
+def serialize_private_key(private_key, private_pem: str):
+    """Save the key in the format .pem on the path"""
+    try:
+        with open(private_pem, "wb") as private_out:
+            private_out.write(
+                private_key.private_bytes(
+                    encoding=serialization.Encoding.PEM,
+                    format=serialization.PrivateFormat.TraditionalOpenSSL,
+                    encryption_algorithm=serialization.NoEncryption(),
+                )
             )
-        )
-    print(f"Приватный ключ сохранен в {private_pem}")
+        print(f"Private key is saved to {private_pem}")
+    except Exception as e:
+        print(e)
+        exit(2)
 
 
 def deserialize_public_key(public_pem: str):
-    with open(public_pem, "rb") as pem_in:
-        public_bytes = pem_in.read()
-    return load_pem_public_key(public_bytes)
+    """Read the key in the format .pem on the path. Return public RSA key"""
+    try:
+        with open(public_pem, "rb") as pem_in:
+            public_bytes = pem_in.read()
+        return load_pem_public_key(public_bytes)
+    except FileNotFoundError:
+        print(f"Error: File {public_pem} not found!")
+        exit(1)
+    except Exception as e:
+        print(e)
+        exit(2)
 
 
 def deserialize_private_key(private_pem: str):
-    with open(private_pem, "rb") as pem_in:
-        private_bytes = pem_in.read()
-    return load_pem_private_key(
-        private_bytes,
-        password=None,
-    )
+    """Read the key in the format .pem on the path. Return private RSA key"""
+    try:
+        with open(private_pem, "rb") as pem_in:
+            private_bytes = pem_in.read()
+        return load_pem_private_key(
+            private_bytes,
+            password=None,
+        )
+    except FileNotFoundError:
+        print(f"Error: File {private_pem} not found!")
+        exit(1)
+    except Exception as e:
+        print(e)
+        exit(2)
 
 
 def encrypt_data(text, public_key):
+    """Encrypt data using an RSA public key"""
     c_text = public_key.encrypt(
         text,
         padding.OAEP(
@@ -66,6 +94,7 @@ def encrypt_data(text, public_key):
 
 
 def decrypt_data(text, private_key):
+    """Decrypt data using an RSA private key. Return decoded data"""
     dc_text = private_key.decrypt(
         text,
         padding.OAEP(
