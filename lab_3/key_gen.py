@@ -12,10 +12,16 @@ def key_gen(lenght: int, public_pem: str, private_pem: str, symmetric_path: str)
     private_key, public_key = generate_rsa_keys()
     serialize_public_key(public_key, public_pem)
     serialize_private_key(private_key, private_pem)
-    key = os.urandom(lenght)  # это байты
+    key = os.urandom(lenght // 8)  # это байты
     serialize_symmetric_key(encrypt_data(key, public_key), symmetric_path)
 
 
 def serialize_symmetric_key(key, symmetric_path: str):
     with open(symmetric_path, "wb") as key_file:
         key_file.write(key)
+    print(f"Симметричный ключ сохранен в {symmetric_path}")
+
+
+def deserialize_symmetric_key(symmetric_path: str):
+    with open(symmetric_path, "rb") as key_file:
+        return key_file.read()

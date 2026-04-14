@@ -7,6 +7,7 @@ from cryptography.hazmat.primitives.serialization import (
 
 
 def generate_rsa_keys():
+    print("Начинаю генерацию...")
     keys = rsa.generate_private_key(public_exponent=65537, key_size=2048)
     private_key = keys
     public_key = keys.public_key()
@@ -21,6 +22,7 @@ def serialize_public_key(public_key, public_pem: str) -> None:
                 format=serialization.PublicFormat.SubjectPublicKeyInfo,
             )
         )
+    print(f"Публичный ключ сохранен в {public_pem}")
 
 
 def serialize_private_key(private_key, private_pem: str) -> None:
@@ -32,6 +34,7 @@ def serialize_private_key(private_key, private_pem: str) -> None:
                 encryption_algorithm=serialization.NoEncryption(),
             )
         )
+    print(f"Приватный ключ сохранен в {private_pem}")
 
 
 def deserialize_public_key(public_pem: str):
@@ -50,7 +53,6 @@ def deserialize_private_key(private_pem: str):
 
 
 def encrypt_data(text, public_key):
-    # text = bytes("кто прочитал тот воскреснет", "UTF-8")
     c_text = public_key.encrypt(
         text,
         padding.OAEP(
@@ -72,5 +74,4 @@ def decrypt_data(text, private_key):
             label=None,
         ),
     )
-
-    return dc_text.decode("UTF-8")
+    return dc_text
