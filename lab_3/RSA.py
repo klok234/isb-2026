@@ -8,7 +8,6 @@ from cryptography.hazmat.primitives.serialization import (
 
 def generate_rsa_keys():
     """Generate a pair of public and private keys."""
-    print("Start generating...")
     keys = rsa.generate_private_key(public_exponent=65537, key_size=2048)
     private_key = keys
     public_key = keys.public_key()
@@ -25,7 +24,6 @@ def serialize_public_key(public_key, public_pem: str):
                     format=serialization.PublicFormat.SubjectPublicKeyInfo,
                 )
             )
-        print(f"Public key is saved to {public_pem}")
     except Exception as e:
         print(e)
         exit(2)
@@ -42,7 +40,6 @@ def serialize_private_key(private_key, private_pem: str):
                     encryption_algorithm=serialization.NoEncryption(),
                 )
             )
-        print(f"Private key is saved to {private_pem}")
     except Exception as e:
         print(e)
         exit(2)
@@ -54,9 +51,6 @@ def deserialize_public_key(public_pem: str):
         with open(public_pem, "rb") as pem_in:
             public_bytes = pem_in.read()
         return load_pem_public_key(public_bytes)
-    except FileNotFoundError:
-        print(f"Error: File {public_pem} not found!")
-        exit(1)
     except Exception as e:
         print(e)
         exit(2)
@@ -71,9 +65,6 @@ def deserialize_private_key(private_pem: str):
             private_bytes,
             password=None,
         )
-    except FileNotFoundError:
-        print(f"Error: File {private_pem} not found!")
-        exit(1)
     except Exception as e:
         print(e)
         exit(2)

@@ -10,7 +10,6 @@ from text_processor import save_text, read_text, read_chipher
 
 def encrypt(text_file: str, symmetric_path: str, private_pem: str, encrypt_file: str):
     """Encrypt data with symmetric encryption using RSA key encryption"""
-    print("Start encrypting...")
     text = read_text(text_file)
     iv = os.urandom(16)
     key = decrypt_data(
@@ -24,13 +23,11 @@ def encrypt(text_file: str, symmetric_path: str, private_pem: str, encrypt_file:
 
     c_text = encryptor.update(padded_data) + encryptor.finalize()
 
-    print("Saving to file...")
     save_text(iv + c_text, encrypt_file)
 
 
 def decrypt(text_file: str, symmetric_path: str, private_pem: str, decrypt_path: str):
     """Decrypt data with symmetric encryption using RSA key encryption"""
-    print("Start decrypting...")
     iv, c_text = read_chipher(text_file)
     key = decrypt_data(
         deserialize_symmetric_key(symmetric_path), deserialize_private_key(private_pem)
@@ -42,5 +39,4 @@ def decrypt(text_file: str, symmetric_path: str, private_pem: str, decrypt_path:
     unpadder = padding.PKCS7(128).unpadder()
     dc_text = unpadder.update(dc_text) + unpadder.finalize()
 
-    print("Saving to file...")
     save_text(dc_text, decrypt_path)

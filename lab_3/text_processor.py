@@ -3,7 +3,6 @@ def save_text(text: str, path: str):
     try:
         with open(path, "wb") as file:
             file.write(text)
-            print(f"Saved to {path}")
     except Exception as e:
         print(e)
         exit(2)
@@ -13,11 +12,7 @@ def read_text(path: str):
     """Read data from file. Return bytes of data"""
     try:
         with open(path, "rb") as file:
-            print(f"Text from {path} is read")
             return file.read()
-    except FileNotFoundError:
-        print(f"Error: File {path} not found!")
-        exit(1)
     except Exception as e:
         print(e)
         exit(2)
@@ -30,9 +25,6 @@ def read_chipher(path: str):
             iv = f.read(16)
             c_text = f.read()
             return iv, c_text
-    except FileNotFoundError:
-        print(f"Error: File {path} not found!")
-        exit(1)
     except Exception as e:
         print(e)
         exit(2)
