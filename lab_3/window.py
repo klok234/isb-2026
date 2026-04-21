@@ -84,7 +84,7 @@ class CryptoApp(QMainWindow):
         for key, label_text in file_labels:
             layout = QHBoxLayout()
             label = QLabel(label_text)
-            label.setFixedWidth(180)
+            label.setFixedWidth(200)
             line_edit = QLineEdit()
             line_edit.editingFinished.connect(self.update_file_settings)
             button = QPushButton("Обзор...")
@@ -189,7 +189,8 @@ class CryptoApp(QMainWindow):
                 widget.setText(self.settings[key])
 
     def get_current_paths(self):
-        """Get paths from UI fields."""
+        """Get paths from UI fields.
+        :return: dict {key: path}"""
         return {key: widget.text().strip() for key, widget in self.file_widgets.items()}
 
     def start_process(self):

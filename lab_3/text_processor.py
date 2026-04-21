@@ -1,5 +1,9 @@
 def save_text(text: str, path: str):
-    """Save data to file"""
+    """
+    Save data to file
+    :param text: Source bytes of data
+    :param path: Path to save bytes
+    """
     try:
         with open(path, "wb") as file:
             file.write(text)
@@ -9,7 +13,11 @@ def save_text(text: str, path: str):
 
 
 def read_text(path: str):
-    """Read data from file. Return bytes of data"""
+    """
+    Read data from file.
+    :param path: Path to text file
+    :return: Bytes of data
+    """
     try:
         with open(path, "rb") as file:
             return file.read()
@@ -19,7 +27,11 @@ def read_text(path: str):
 
 
 def read_chipher(path: str):
-    """Read chipher text from file. Return iv sequence and chiphertext"""
+    """
+    Read chipher text from file.
+    :param path: Path to file with chipertext
+    :return: iv sequence and chiphertext
+    """
     try:
         with open(path, "rb") as f:
             iv = f.read(16)
